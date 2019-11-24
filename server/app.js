@@ -3,6 +3,10 @@ var url = require('url');
 var fs = require('fs');
 var io = require('socket.io')( { resource: '/citio/socket.io' });
 
+io.on('connection'), socket => {
+	socket.emit('connected', 'Hello World')
+}
+
 var server = http.createServer(function (req, res) {
   var path = url.parse(req.url).pathname;
 
