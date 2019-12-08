@@ -1,5 +1,5 @@
 const express = require('express'),
-      socket = require('socket.io'),
+    socket = require('socket.io'),
 
 // app setup
     app = express(),
@@ -8,15 +8,21 @@ const express = require('express'),
     });
 
 // static files
-    app.use(express.static('public'));
+app.use(express.static('public'));
 
 // socket setup
-    const io = socket(server);
+const io = socket(server);
 
-    io.on('connection', (socket) => {
-        console.log('made socket connection ', socket.id);
+io.on('connection', (socket) => {
+    console.log('made socket connection ', socket.id);
 
-        socket.on('uvodnyFormular', (data) => {
-            console.log(data);
-        });
+    socket.on('uvodnyFormular', (data) => {
+        console.log(data);
+
+
+        // Tu budeme dhľadať dáta z DB
+        // for dbSearchComponent in dbSearchComponentList:
+        //      databaseData.append(dbSearchComponent.Search(data.tocojepodstatne))
+        // socket.emit('results', data);
     });
+});

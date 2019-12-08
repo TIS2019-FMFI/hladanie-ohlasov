@@ -8,7 +8,7 @@
     <form id="uvodnyFormular">
         <fieldset>
             <legend>Povinné Údaje:</legend>
-            <label><input id="doiSearch" type="checkbox">hľadať podľa DOI</label>
+            <label><input id="doiSearch" type="checkbox">hľadať podľa DOI</label> <br>
             <label class="B" hidden>DOI: <input id="DOI" type="text" ><br></label>
             <label class="A"> Meno: <input id="name" type="text"> </label>
             <label class="A"> Priezvisko: <input id="surname" type="text"></label>
@@ -16,11 +16,27 @@
         <fieldset class="A">
             <legend>Voliteľné Údaje:</legend>
             Roky a množiny rokov: <input id="years" type="text">
-            <p id="help1" claas="B">???</p> <br>
-            <div hidden id="yearsHelp">totojeHelp <p id="closeHelp1">CLOSE</p></div>
+            <a id="help1"><strong>?</strong></a> <br>
+            <div hidden id="yearsHelp"><a id="closeHelp1"><strong>(zbaliť pomôcku)</strong></a>
+                <p>Zadajte konkrétne roky a časové obdobia, v ktorých sa majú záznamy vyhľadávať.<br>
+                   VZORY: <br>
+                    'XXXX' znamená v roku XXXX.<br>
+                    'XXXX-YYYY' znamená od roky XXXX do roku YYYY (vrátane).<br>
+                    'XXXX-:' znamená od roku XXXX po súčasnosť.<br><br>
+                    Jednotlivé vzory oddeľujte znakmi &&.<br><br>
+                    PRÍKLAD: <br> ':-1200 && 1520-1525 && 1998 && 2000 && 2010-:'<br>
+                    Vyhľadá záznamy od nepamäti do roku 1200 a od roku 1520 do roku 1525 a v roku 1998 a v roku 2000 a od roku 2010 až po súčasnosť.
+                </p>
+            </div>
             Afiliácia: <input id="afiliation" type="text">
-            <p id="help2" claas="B">???</p> <br>
-            <div hidden id="afilHelp">totojeHelp <p id="closeHelp2">CLOSE</p></div>
+            <a id="help2"><strong>?</strong></a> <br>
+            <div hidden id="afilHelp"><a id="closeHelp2"><strong>(zbaliť pomôcku)</strong></a>
+                <p>Zadajte konkrétne afiliácie.<br>
+                    Jednotlivé afiliácie oddeľujte znakmi &&.<br><br>
+                    PRÍKLAD: <br> 'Mars University && Hogwarts'<br>
+                    Vyhľadá iba záznamy s afiliáciami Mars University a Hoqwarts.
+                </p>
+            </div>
         </fieldset>
         <button id="send">Hľadaj</button>
     </form>
