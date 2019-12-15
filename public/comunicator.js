@@ -8,6 +8,6 @@ const socket = io.connect("http://localhost:4000");
 var formular = document.getElementById('uvodnyFormular');
 
 // Listen for events
-socket.on('chat', (data) => {
-    //output.innerHTML += '<p><strong>' + data.handle + ':</strong> ' + data.message + '</p>';
+socket.on('publications', (data) => {
+    console.log(data);
 });
