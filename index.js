@@ -2,7 +2,9 @@ const express = require('express'),
     socket = require('socket.io'),
 //AT HOME:
 //before every session in linux terminal set enviroment variable:
-//export ALL_PROXY="http://login:password@proxy.uniba.sk:3128"
+//linux bash:  export ALL_PROXY="http://login:password@proxy.uniba.sk:3128"
+//windows: go to proxy setttings,add script address ->  http://www.uniba.sk/proxy.pac
+//
     fetch = require('node-fetch-with-proxy')
 //AT SCHOOL:
     //fetch = require('node-fetch'),
