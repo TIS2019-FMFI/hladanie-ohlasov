@@ -11,7 +11,7 @@ module.exports = {
 
         getUrl() {
             let res = "https://api.elsevier.com/content/search/scopus?query=";
-            // generate url via WOS documentation
+            //TODO generate url via WOS documentation
             console.log(res);
             return url.parse(res);
         }
