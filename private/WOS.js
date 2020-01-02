@@ -1,12 +1,12 @@
 // Scopus.js
 module.exports = {
-    WOS: class WOS {
-        constructor(name, surname, years, afiliation, DOI) {
-            this.name = name;
-            this.surname = surname;
-            this.years = years;
-            this.afiliation = afiliation;
-            this.DOI = DOI;
+    Translator: class Translator {
+        constructor() {
+            this.apiKey = null;
+        }
+
+        getData() {
+            return {data:"DATA"}
         }
 
         getUrl() {
