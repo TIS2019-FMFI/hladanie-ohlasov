@@ -18,14 +18,24 @@ module.exports = {
 
             let entry = [];
             results.entry.forEach(element => {
+                let authors = [];
+                element.author.forEach(author => {
+                    authors.push({
+                      name:author['given-name'],
+                      surname:author['surname'],
+                      initials:author['initials']
+                    })
+                });
                 entry.push({
+                        title: element['dc:title'],
                         year: element['prism:coverDate'],
                         source: "Scopus",
                         volume: element['prism:volume'],
                         pages: element['prism:pageRange'],
                         issue: element['prism:issueIdentifier'],
-                        authors: element.author,
-                        citationCount: undefined
+                        citationCount: element['citedby-count'],
+                        doi:element['prism:doi'],
+                        authors: authors
                     }
                 );
                 parsedData.publications = entry;

@@ -22,7 +22,6 @@ const io = socket(server);
 
 
 // prepare "translators" array for each db in config.json:
-
 const translators = [];
 let databasesJSON = JSON.parse(fs.readFileSync(path.resolve(__dirname, 'private/config.json'))).databases;
 for (let key in databasesJSON) {
@@ -42,10 +41,10 @@ io.on('connection', (socket) => {
         translators.forEach(translator => {
             fetch(translator.getUrl(data.name, data.surname, data.years, data.afiliation, data.DOI))
                 .then(response => response.json())
-                .then(response => socket.emit('publications', response))
+                //.then(response => socket.emit('publications', response))
                 .then(response => translator.parseData(response))
                 .then(response => {
-                    console.log(response);
+                    socket.emit('searchedPublications', response)
                 })
         });
     });

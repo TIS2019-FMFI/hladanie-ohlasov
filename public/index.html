@@ -5,46 +5,20 @@
         <title>TTTENBL</title>
     </head>
     <body>
-    <form id="uvodnyFormular">
-        <fieldset>
-            <legend>Povinné Údaje:</legend>
-            <label><input id="doiSearch" type="checkbox">hľadať podľa DOI</label> <br>
-            <label class="B" hidden>DOI: <input id="DOI" type="text" ><br></label>
-            <label class="A"> Meno: <input id="name" type="text"> </label>
-            <label class="A"> Priezvisko: <input id="surname" type="text"></label>
-        </fieldset>
-        <fieldset class="A">
-            <legend>Voliteľné Údaje:</legend>
-            Roky a množiny rokov: <input id="years" type="text">
-            <a id="help1"><strong>?</strong></a> <br>
-            <div hidden id="yearsHelp"><a id="closeHelp1"><strong>(zbaliť pomôcku)</strong></a>
-                <p>Zadajte konkrétne roky a časové obdobia, v ktorých sa majú záznamy vyhľadávať.<br>
-                   VZORY: <br>
-                    'XXXX' znamená v roku XXXX.<br>
-                    'XXXX-YYYY' znamená od roky XXXX do roku YYYY (vrátane).<br>
-                    'XXXX-:' znamená od roku XXXX po súčasnosť.<br><br>
-                    Jednotlivé vzory oddeľujte znakmi &&.<br><br>
-                    PRÍKLAD: <br> ':-1200 && 1520-1525 && 1998 && 2000 && 2010-:'<br>
-                    Vyhľadá záznamy od nepamäti do roku 1200 a od roku 1520 do roku 1525 a v roku 1998 a v roku 2000 a od roku 2010 až po súčasnosť.
-                </p>
-            </div>
-            Afiliácia: <input id="afiliation" type="text">
-            <a id="help2"><strong>?</strong></a> <br>
-            <div hidden id="afilHelp"><a id="closeHelp2"><strong>(zbaliť pomôcku)</strong></a>
-                <p>Zadajte konkrétne afiliácie.<br>
-                    Jednotlivé afiliácie oddeľujte znakmi &&.<br><br>
-                    PRÍKLAD: <br> 'Mars University && Hogwarts'<br>
-                    Vyhľadá iba záznamy s afiliáciami Mars University a Hoqwarts.
-                </p>
-            </div>
-        </fieldset>
-        <button id="send">Hľadaj</button>
-    </form>
-    <div id="pubs">
-    </div>
     </body>
 </html>
 
+<script src="renderer.js"></script>
 <script src="/socket.io/socket.io.js"></script>
-<script src="comunicator.js"></script>
-<script src="spracovavac.js"></script>
+
+<script>
+    const socket = io.connect("http://localhost:4000");
+    const renderer = new Renderer();
+    renderer.createMainForm();
+
+    // render searched data
+    socket.on('searchedPublications', (data) => {
+        console.log(data);
+        renderer.renderSearchResults(data);
+    });
+</script>
