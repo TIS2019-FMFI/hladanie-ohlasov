@@ -2,6 +2,48 @@ class Renderer {
     constructor() {
         this.searchResultsForm = undefined; //  vytvorí sa po odoslaní uvodneho formulara! (v metode createMainForm())
         this.searchResults = {};
+        this.authorized = false;
+    }
+
+    authorization() {
+        let authForm = document.createElement('form');
+        authForm.id = 'autorizacnyFormular';
+        let authFieldset = document.createElement('fieldset');
+
+        let authKey = document.createElement('input');
+        authKey.id = 'key';
+        authKey.type = 'text';
+
+        let authLabel = document.createElement('label');
+        authLabel.appendChild(document.createTextNode("Autorizačný kľúč: "));
+        authLabel.appendChild(authKey);
+
+        let authButton = document.createElement('button');
+        authButton.id = "send";
+        authButton.innerHTML = 'Over kľúč';
+        authButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            socket.emit('autorizacia', {
+                authKey: document.getElementById('key').value
+            });             
+        });
+
+        authFieldset.appendChild(authLabel);
+        authForm.appendChild(authFieldset);
+        authForm.appendChild(authButton);
+
+        let body = document.getElementsByTagName('body')[0];
+        body.appendChild(authForm);
+
+        socket.on('approved', () => {
+            authKey.classList.remove("error");
+            body.removeChild(authForm);    
+            this.createMainForm();
+        });  
+
+        socket.on('denied', () => {
+            authKey.classList.add("error");
+        }); 
     }
 
     createMainForm() {
@@ -133,24 +175,73 @@ class Renderer {
 
             var searchBtn = document.getElementById('send');
 
+            var validateForm = function() {
+                let valid = true;
+                let doiSearch = document.getElementById('doiSearch').checked;
+                if (doiSearch){
+                    let doi = document.getElementById('DOI');
+                    if (doi.value != '') {
+                        doi.classList.remove("error");
+                    } else {
+                        doi.classList.add("error");
+                        valid = false;
+                    }
+                } else {
+                    let name = document.getElementById('name');
+                    let surname = document.getElementById('surname');
+                    let years = document.getElementById('years');
+                    let afiliation = document.getElementById('afiliation');
+                    if (name.value != ''){
+                        name.classList.remove("error");
+                    } else {
+                        name.classList.add("error");
+                        valid = false;
+                    }
+                    if (surname.value != ''){
+                        surname.classList.remove("error");
+                    } else {
+                        surname.classList.add("error");
+                        valid = false;
+                    }
+                    if (RegExp('^[0-9-:]*(&&[0-9]+)*$').test(years.value)){
+                        years.classList.remove("error");
+                    } else {
+                        years.classList.add("error");
+                        valid = false;
+                    }
+                    /*
+                    if (RegExp('^[a-zA-Z1-9]*(&&[a-zA-Z1-9]+)*$').test(afiliation.value)){
+                        afiliation.classList.remove("error");
+                    } else {
+                        afiliation.classList.add("error");
+                        valid = false;
+                    }
+                    */
+                }
+                return valid;
+            }
+
             // odosle uvodny formular a vytvorí nový searchResultsForm
             searchBtn.addEventListener('click', (e) => {
                 e.preventDefault();
-                let form = document.getElementById('uvodnyFormular');
-                form.hidden = true;
+                
+                if (validateForm()) {
+                    let form = document.getElementById('uvodnyFormular');
+                    form.hidden = true;
 
-                let doiSearch = document.getElementById('doiSearch').checked;
-                socket.emit('uvodnyFormular', {
-                    searchByDOI: doiSearch,//document.getElementById('doiSearch').checked,
-                    DOI: (doiSearch) ? document.getElementById('DOI').value : '',
-                    name: (doiSearch) ? '' : document.getElementById('name').value,
-                    surname: (doiSearch) ? '' : document.getElementById('surname').value,
-                    years: (doiSearch) ? '' : document.getElementById('years').value,
-                    afiliation: (doiSearch) ? '' : document.getElementById('afiliation').value
-                });
+                    let doiSearch = document.getElementById('doiSearch').checked;
+                    socket.emit('uvodnyFormular', {
+                        searchByDOI: doiSearch,//document.getElementById('doiSearch').checked,
+                        DOI: (doiSearch) ? document.getElementById('DOI').value : '',
+                        name: (doiSearch) ? '' : document.getElementById('name').value,
+                        surname: (doiSearch) ? '' : document.getElementById('surname').value,
+                        years: (doiSearch) ? '' : document.getElementById('years').value,
+                        afiliation: (doiSearch) ? '' : document.getElementById('afiliation').value
+                    });
 
-                this.searchResultsForm = document.createElement("form");
-                document.getElementsByTagName('body')[0].appendChild(this.searchResultsForm);
+                    this.searchResultsForm = document.createElement("form");
+                    document.getElementsByTagName('body')[0].appendChild(this.searchResultsForm);
+                }               
             });
 
             var helpp1 = document.getElementById('help1');

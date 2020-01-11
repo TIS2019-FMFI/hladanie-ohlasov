@@ -37,6 +37,15 @@ for (let key in databasesJSON) {
 io.on('connection', (socket) => {
     console.log('Made socket connection ', socket.id);
 
+    socket.on('autorizacia', (data) => {
+        let key = JSON.parse(fs.readFileSync(path.resolve(__dirname, 'private/config.json'))).key;
+        if (data.authKey === key){
+            socket.emit('approved');
+        } else {
+            socket.emit('denied');
+        }
+    });
+
     socket.on('uvodnyFormular', (data) => {
         translators.forEach(translator => {
             fetch(translator.getUrl(data.name, data.surname, data.years, data.afiliation, data.DOI))
