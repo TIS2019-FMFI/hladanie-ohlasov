@@ -11,7 +11,6 @@ module.exports = {
         }
 
         parseData(data) {
-            console.log(data);
             let results = data['search-results'];
             let parsedData = {
                 numberOfResults: results['opensearch:totalResults']
