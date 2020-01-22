@@ -37,24 +37,17 @@ for (let key in databasesJSON) {
 io.on('connection', (socket) => {
     console.log('Made socket connection ', socket.id);
 
-    socket.on('autorizacia', (data) => {
-        let key = JSON.parse(fs.readFileSync(path.resolve(__dirname, 'private/config.json'))).key;
-        if (data.authKey === key){
-            socket.emit('approved');
-        } else {
-            socket.emit('denied');
-        }
-    });
-
     socket.on('uvodnyFormular', (data) => {
         translators.forEach(translator => {
-            fetch(translator.getUrl(data.name, data.surname, data.years, data.afiliation, data.DOI))
-                .then(response => response.json())
-                //.then(response => socket.emit('publications', response))
-                .then(response => translator.parseData(response))
-                .then(response => {
-                    socket.emit('searchedPublications', response)
-                })
+            let response = translator.getSearchResults(translator.getUrl(data.name, data.surname, data.years, data.afiliation, data.DOI));
+            response.then(response => socket.emit('searchedPublications', response));
+        });
+    });
+
+    socket.on('searchMore', (url) => {
+        translators.forEach(translator => {
+            let response = translator.getSearchResults(url);
+            response.then(response => socket.emit('searchedPublications', response));
         });
     });
 

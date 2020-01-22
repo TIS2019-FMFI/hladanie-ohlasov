@@ -7,18 +7,19 @@
     <body>
     </body>
 </html>
-<link rel="stylesheet" type="text/css" href="stylesheet.css">
+
 <script src="renderer.js"></script>
 <script src="/socket.io/socket.io.js"></script>
 
 <script>
     const socket = io.connect("http://localhost:4000");
     const renderer = new Renderer();
-    renderer.authorization();
+    renderer.createMainForm();
 
     // render searched data
     socket.on('searchedPublications', (data) => {
         console.log(data);
         renderer.renderSearchResults(data);
     });
+
 </script>

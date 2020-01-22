@@ -1,6 +1,7 @@
 // Scopus.js
 const
     url = require('url'),
+    fetch = require('node-fetch-with-proxy'); // AT SCHOOL: fetch = require('node-fetch');
     fs = require('fs'),
     path = require('path');
 
@@ -8,12 +9,19 @@ module.exports = {
     Translator: class Translator {
         constructor(apiKey) {
             this.apikey = apiKey//JSON.parse(fs.readFileSync(path.resolve(__dirname, 'config.json'))).databases.scopus.apiKey;
+            this.minNumberOfResults = JSON.parse(fs.readFileSync(path.resolve(__dirname, 'config.json'))).minNumberOfResults;
         }
 
         parseData(data) {
+
+            //return data; // AK CHCEM VIDIED STRUKTURU DAT V PREHLIACACI... inak zakomentovat"
+
             let results = data['search-results'];
+
             let parsedData = {
-                numberOfResults: results['opensearch:totalResults']
+                numberOfResults: results['opensearch:totalResults'],
+                numberOfItemsPerPage: results['opensearch:itemsPerPage'],
+                next: 'link' in results ? '2' in results['link'] ? '@href' in  results['link']['2'] ? results['link']['2']['@href'] : undefined : undefined : undefined
             };
 
             let entry = [];
@@ -44,6 +52,16 @@ module.exports = {
             return parsedData;
         }
 
+        async getSearchResults(url) {
+            let result = {};
+            await fetch(url)
+                .then(response => response.json())
+                .then(response => this.parseData(response))
+                .then(response => result = response);
+            return result;
+
+        }
+
         getUrl(name, surname, years, affiliation, DOI) {
             let res = "https://api.elsevier.com/content/search/scopus?query=";
             if (DOI) {
@@ -58,7 +76,6 @@ module.exports = {
                 }
             }
             res += "&view=COMPLETE&apiKey=" + this.apikey + "&httpAccept=application/json";
-            console.log(res);
             return url.parse(res);
         }
     }
