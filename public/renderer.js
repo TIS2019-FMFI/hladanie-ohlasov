@@ -1,12 +1,66 @@
 class Renderer {
+    
+    #authorized = false;
+
     constructor() {
         this.searchResultsForm = undefined; //  vytvorí sa po odoslaní uvodneho formulara! (v metode createMainForm())
         this.searchResults = {};
         this.id = 0;
     }
 
+    authorization() {
+        if (sessionStorage.getItem('authKey')) {
+            socket.emit('autorizacia', {
+                authKey: sessionStorage.getItem('authKey')
+            }); 
+        }
+        let authForm = document.createElement('form');
+        authForm.id = 'autorizacnyFormular';
+        let authFieldset = document.createElement('fieldset');
+
+        let authKey = document.createElement('input');
+        authKey.id = 'key';
+        authKey.type = 'text';
+
+        let authLabel = document.createElement('label');
+        authLabel.appendChild(document.createTextNode("Autorizačný kľúč: "));
+        authLabel.appendChild(authKey);
+
+        let authButton = document.createElement('button');
+        authButton.id = "send";
+        authButton.innerHTML = 'Over kľúč';
+        authButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            socket.emit('autorizacia', {
+                authKey: authKey.value
+            });             
+        });
+
+        authFieldset.appendChild(authLabel);
+        authForm.appendChild(authFieldset);
+        authForm.appendChild(authButton);
+
+        let body = document.getElementsByTagName('body')[0];
+        body.appendChild(authForm);
+
+        socket.on('approved', () => {
+            authKey.classList.remove("error");
+            body.removeChild(authForm);
+            if (!sessionStorage.getItem('authKey')){
+                sessionStorage.setItem('authKey', authKey.value);
+            }
+            this.#authorized = true;  
+            this.createMainForm();
+        });  
+
+        socket.on('denied', () => {
+            authKey.classList.add("error");
+        }); 
+    }
+
     createMainForm() {
         // create form objects:
+        if (this.#authorized) {
         {
         let form = document.createElement('form');
         form.id = 'uvodnyFormular';
@@ -134,9 +188,57 @@ class Renderer {
 
             var searchBtn = document.getElementById('send');
 
+            var validateForm = function() {
+                let valid = true;
+                let doiSearch = document.getElementById('doiSearch').checked;
+                if (doiSearch){
+                    let doi = document.getElementById('DOI');
+                    if (doi.value != '') {
+                        doi.classList.remove("error");
+                    } else {
+                        doi.classList.add("error");
+                        valid = false;
+                    }
+                } else {
+                    let name = document.getElementById('name');
+                    let surname = document.getElementById('surname');
+                    let years = document.getElementById('years');
+                    let afiliation = document.getElementById('afiliation');
+                    if (name.value != ''){
+                        name.classList.remove("error");
+                    } else {
+                        name.classList.add("error");
+                        valid = false;
+                    }
+                    if (surname.value != ''){
+                        surname.classList.remove("error");
+                    } else {
+                        surname.classList.add("error");
+                        valid = false;
+                    }
+                    if (RegExp('^[0-9-:]*(&&[0-9]+)*$').test(years.value)){
+                        years.classList.remove("error");
+                    } else {
+                        years.classList.add("error");
+                        valid = false;
+                    }
+                    /*
+                    if (RegExp('^[a-zA-Z1-9]*(&&[a-zA-Z1-9]+)*$').test(afiliation.value)){
+                        afiliation.classList.remove("error");
+                    } else {
+                        afiliation.classList.add("error");
+                        valid = false;
+                    }
+                    */
+                }
+                return valid;
+            }
+
             // odosle uvodny formular a vytvorí nový searchResultsForm
             searchBtn.addEventListener('click', (e) => {
                 e.preventDefault();
+
+                if (validateForm()) {
                 let form = document.getElementById('uvodnyFormular');
                 form.hidden = true;
 
@@ -152,7 +254,7 @@ class Renderer {
 
                 this.searchResultsForm = document.createElement("form");
                 document.getElementsByTagName('body')[0].appendChild(this.searchResultsForm);
-            });
+            }});
 
             var helpp1 = document.getElementById('help1');
             help1.addEventListener('click', () => {
@@ -184,12 +286,12 @@ class Renderer {
 
         }
 
-    }
+    }}
 
     renderSearchResults(data) {
         let pubs = data.publications;
         let resultsDiv = document.getElementsByClassName('searchResults')[0];
-        let buttonDiv = document.getElementsByClassName('buttonDiv')[0];
+        let buttonDiv = document.getElementsByClassName('buttonDiv')[0]; 
         if(document.getElementById('moreButton')) {
             document.getElementById('moreButton').disabled = false;
         }
@@ -205,15 +307,25 @@ class Renderer {
             citButton.addEventListener('click', (e) => {
                 e.preventDefault();
                 let res = [];
-                socket.emit('searchCitations');
-                window.open('http://localhost:4000/citations.html');
+                for (let key in this.searchResults) {
+                    if (this.searchResults[key].check.checked === true){
+                        res.push(this.searchResults[key]);
+                    }
+                }
+                socket.emit('searchCitations', res);
+                let citWindow = window.open('http://localhost:4000/citations.html');
+                socket.on('searchedCitations', (data) => {
+                    citWindow.console.log(data);
+                    citWindow.renderer.renderCitations(data);
+                });
+                
             });
         }
         for (var i = 0; i < pubs.length; i++) {
-            this.searchResults['checkButton' + this.id++] = pubs[i];
+            
             let fieldSet = document.createElement('fieldset');
-            let checkBox = document.createElement('input');checkBox.id='checkButton' + i.toString(); checkBox.type = 'checkbox';
-            //console.log(pubs[i].title);
+            let checkBox = document.createElement('input'); checkBox.type = 'checkbox';
+            this.searchResults[this.id++] = {...pubs[i], check: checkBox};
             fieldSet.appendChild(checkBox);
 
             let legend = document.createElement('legend'); legend.innerText = pubs[i].title;
@@ -231,7 +343,7 @@ class Renderer {
 
             for (let j=0; j<pubs[i].authors.length; j++) {
                 let author = pubs[i].authors[j];
-               fieldSet.appendChild(document.createTextNode(author.surname + "," + author.name));
+               fieldSet.appendChild(document.createTextNode(author.surname + ", " + author.name));
                if (j<pubs[i].authors.length-1){
                    fieldSet.appendChild(document.createTextNode(" – "))
                }
@@ -264,6 +376,51 @@ class Renderer {
 
         console.log(this.searchResults);
 
+
+    }
+
+    renderCitations(data) {
+        let citationsDiv = document.getElementById('citations');
+        let pubFieldSet = document.createElement('fieldset');
+        let legend = document.createElement('legend');
+        legend.innerText = data.pubTitle;
+        pubFieldSet.appendChild(legend);
+        pubFieldSet.appendChild(document.createTextNode(
+            "doi: "+ data.publication.doi + " | " +
+            " pii: "+ data.publication.pii
+        ));
+        for (let cit of data.citations){
+            let citFieldSet = document.createElement('fieldset');
+            let legend = document.createElement('legend');
+            legend.innerText = cit.publicationName;
+            citFieldSet.appendChild(legend);
+            let copyButton = document.createElement('button'); copyButton.innerHTML = "Kopírovať";
+            citFieldSet.appendChild(copyButton);
+            citFieldSet.appendChild(document.createElement('br'));
+
+            citFieldSet.appendChild(document.createTextNode(
+                "year: "+ cit.year + " | " +
+                " source: "+ cit.source + " | " +
+                " volume: " + cit.volume + " | " +
+                " pages: " + cit.pages + " | " +
+                " issue: " + cit.issue + " | " +
+                " type: " + cit.type
+            ));
+
+            citFieldSet.appendChild(document.createElement('br'));
+            citFieldSet.appendChild(document.createTextNode(cit.authors.length.toString() + " authors: "));
+
+            for (let j=0; j<cit.authors.length; j++) {
+                let author = cit.authors[j];
+                citFieldSet.appendChild(document.createTextNode(author.name));
+                if (j<cit.authors.length-1){
+                    citFieldSet.appendChild(document.createTextNode(" – "));
+                }
+            }
+
+            pubFieldSet.appendChild(citFieldSet);
+        }
+        citationsDiv.appendChild(pubFieldSet);
 
     }
 }
