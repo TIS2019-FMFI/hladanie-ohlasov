@@ -20,7 +20,7 @@ class Renderer {
 
         let authKey = document.createElement('input');
         authKey.id = 'key';
-        authKey.type = 'text';
+        authKey.type = 'password';
 
         let authLabel = document.createElement('label');
         authLabel.appendChild(document.createTextNode("Autorizačný kľúč: "));
@@ -138,9 +138,9 @@ class Renderer {
             "                   VZORY: <br>\n" +
             "                    'XXXX' znamená v roku XXXX.<br>\n" +
             "                    'XXXX-YYYY' znamená od roky XXXX do roku YYYY (vrátane).<br>\n" +
-            "                    'XXXX-:' znamená od roku XXXX po súčasnosť.<br><br>\n" +
+            "                    'XXXX-' znamená od roku XXXX po súčasnosť.<br><br>\n" +
             "                    Jednotlivé vzory oddeľujte znakmi &&.<br><br>\n" +
-            "                    PRÍKLAD: <br> ':-1200 && 1520-1525 && 1998 && 2000 && 2010-:'<br>\n" +
+            "                    PRÍKLAD: <br> '-1200 && 1520-1525 && 1998 && 2000 && 2010-'<br>\n" +
             "                    Vyhľadá záznamy od nepamäti do roku 1200 a od roku 1520 do roku 1525 a v roku 1998 a v roku 2000 a od roku 2010 až po súčasnosť.\n" +
             "                </p>";
         fieldset2.appendChild(help1Content);
@@ -216,7 +216,7 @@ class Renderer {
                         surname.classList.add("error");
                         valid = false;
                     }
-                    if (RegExp('^[0-9-:]*(&&[0-9]+)*$').test(years.value)){
+                    if (RegExp('^[- 0-9]*(&&[0-9 -]+)*$').test(years.value)){
                         years.classList.remove("error");
                     } else {
                         years.classList.add("error");
@@ -289,6 +289,10 @@ class Renderer {
     }}
 
     renderSearchResults(data) {
+        if (data ===null){
+            console.log("No results");
+            return;
+        }
         let pubs = data.publications;
         let resultsDiv = document.getElementsByClassName('searchResults')[0];
         let buttonDiv = document.getElementsByClassName('buttonDiv')[0]; 
@@ -325,7 +329,7 @@ class Renderer {
             
             let fieldSet = document.createElement('fieldset');
             let checkBox = document.createElement('input'); checkBox.type = 'checkbox';
-            this.searchResults[this.id++] = {...pubs[i], check: checkBox};
+            this.searchResults[this.id++] = {...pubs[i], check: checkBox, self: fieldSet};
             fieldSet.appendChild(checkBox);
 
             let legend = document.createElement('legend'); legend.innerText = pubs[i].title;

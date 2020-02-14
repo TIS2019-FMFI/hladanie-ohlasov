@@ -48,8 +48,15 @@ io.on('connection', (socket) => {
 
     socket.on('uvodnyFormular', (data) => {
         translators.forEach(translator => {
-            let response = translator.getSearchResults(translator.getUrl(data.name, data.surname, data.years, data.afiliation, data.DOI));
-            response.then(response => socket.emit('searchedPublications', response));
+            let years = data.years.split("&&");
+            let urls = [];
+            for (let year of years) {
+                urls.push(translator.getUrl(data.name, data.surname, year, data.afiliation, data.DOI));
+            }
+            for (let url of urls){
+                let response = translator.getSearchResults(url);
+                response.then(response => socket.emit('searchedPublications', response));
+            }   
         });
     });
 

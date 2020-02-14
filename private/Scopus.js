@@ -20,6 +20,10 @@ module.exports = {
 
             let results = data['search-results'];
 
+            if (results['opensearch:totalResults'] == 0){
+                return null;
+            }
+
             let parsedData = {
                 numberOfResults: results['opensearch:totalResults'],
                 numberOfItemsPerPage: results['opensearch:itemsPerPage'],
@@ -40,6 +44,7 @@ module.exports = {
                         title: element['dc:title'],
                         year: element['prism:coverDate'],
                         source: "Scopus",
+                        affiliation: element['affiliation'],
                         volume: element['prism:volume'],
                         pages: element['prism:pageRange'],
                         issue: element['prism:issueIdentifier'],
@@ -73,13 +78,26 @@ module.exports = {
             } else {
                 res += "AUTHOR-NAME(" + surname + ", " + name + ")";
                 if (years) {
-                    res += ", PUBYEAR = " + years;
+                    let y = years.trim().split('-');
+                    if (y.length === 1){
+                        res += " AND PUBYEAR = " + y[0];
+                    } else if (y[0] === "") {
+                        res += " AND PUBYEAR < " + (parseInt(y[1])+1);
+                    } else if (y[1] === "") {
+                        res += " AND PUBYEAR > " + (parseInt(y[0])-1);
+                    } else {
+                        res += " AND PUBYEAR > " + (parseInt(y[0])-1) + " AND PUBYEAR < " + (parseInt(y[1])+1);
+                    }  
                 }
                 if (affiliation) {
-                    res += ", AFFILORG(" + affiliation + ")";
+                    let affil = affiliation.split("&&");
+                    affil.map(x => x.trim());
+                    affil = affil.join("OR");
+                    res += " AND AFFILORG(" + affil + ")";
                 }
             }
             res += "&view=COMPLETE&apiKey=" + this.apikey + "&httpAccept=application/json";
+            console.log(res);
             return url.parse(res);
         }
 
