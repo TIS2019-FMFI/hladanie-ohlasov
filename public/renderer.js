@@ -307,7 +307,14 @@ class Renderer {
             let citButton = document.createElement('button');
             citButton.id = "citButton";
             citButton.innerHTML = 'Vyhladaj citacie';
+            let backButton = document.createElement('button');
+            backButton.id = "backButton";
+            backButton.innerHTML = 'Späť';
+            backButton.addEventListener('onclick', function() {
+                this.createMainForm();
+            });
             buttonDiv.appendChild(citButton);
+            buttonDiv.appendChild(backButton);
             citButton.addEventListener('click', (e) => {
                 e.preventDefault();
                 let res = [];
@@ -335,12 +342,11 @@ class Renderer {
             let legend = document.createElement('legend'); legend.innerText = pubs[i].title;
             fieldSet.appendChild(legend);
             fieldSet.appendChild(document.createTextNode(
-                "year: "+ pubs[i].year.split('-')[0] + " | " +
-                    " source: "+pubs[i].source + " | " +
-                    " volume: " + pubs[i].volume + " | " +
-                    " pages: " + pubs[i].pages + " | " +
-                    " issue: " + pubs[i].issue + " | " +
-                    " doi: " + pubs[i].doi
+                "source: "+pubs[i].source + " | " +
+                " year: "+ pubs[i].year.split('-')[0] + " | " +
+                " volume: " + pubs[i].volume + " | " +
+                " pages: " + pubs[i].pages + " | " +
+                " doi: " + pubs[i].doi
             ));
             fieldSet.appendChild(document.createElement('br'));
             fieldSet.appendChild(document.createTextNode(pubs[i].authors.length.toString() + " authors: "));
@@ -390,8 +396,7 @@ class Renderer {
         legend.innerText = data.pubTitle;
         pubFieldSet.appendChild(legend);
         pubFieldSet.appendChild(document.createTextNode(
-            "doi: "+ data.publication.doi + " | " +
-            " pii: "+ data.publication.pii
+            "doi: "+ data.publication.doi
         ));
         for (let cit of data.citations){
             let citFieldSet = document.createElement('fieldset');
@@ -403,11 +408,8 @@ class Renderer {
             citFieldSet.appendChild(document.createElement('br'));
 
             citFieldSet.appendChild(document.createTextNode(
-                "year: "+ cit.year + " | " +
-                " source: "+ cit.source + " | " +
-                " volume: " + cit.volume + " | " +
-                " pages: " + cit.pages + " | " +
-                " issue: " + cit.issue + " | " +
+                "source: "+ cit.source + " | " +
+                " year: "+ cit.year + " | " +
                 " type: " + cit.type
             ));
 

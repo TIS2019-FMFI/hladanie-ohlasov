@@ -103,7 +103,7 @@ module.exports = {
 
         getCitationUrl(scopusId) {
             let res = "https://api.elsevier.com/content/abstract/citations?scopus_id=";
-            res += scopusId + "&apiKey=" + this.apikey + "&httpAccept=application/json";
+            res += scopusId + "&citation=exclude-self&apiKey=" + this.apikey + "&httpAccept=application/json";
             return url.parse(res);
         }
 
@@ -119,7 +119,7 @@ module.exports = {
 
         parseCitations(data) {
 
-            console.log(data);
+            //return data;
 
             let results = data['abstract-citations-response'];
 
