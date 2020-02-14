@@ -48,14 +48,35 @@ io.on('connection', (socket) => {
 
     socket.on('uvodnyFormular', (data) => {
         translators.forEach(translator => {
-            fetch(translator.getUrl(data.name, data.surname, data.years, data.afiliation, data.DOI))
-                .then(response => response.json())
-                //.then(response => socket.emit('publications', response))
-                .then(response => translator.parseData(response))
-                .then(response => {
-                    socket.emit('searchedPublications', response)
-                })
+            let years = data.years.split("&&");
+            let urls = [];
+            for (let year of years) {
+                urls.push(translator.getUrl(data.name, data.surname, year, data.afiliation, data.DOI));
+            }
+            for (let url of urls){
+                let response = translator.getSearchResults(url);
+                response.then(response => socket.emit('searchedPublications', response));
+            }   
         });
     });
 
+    socket.on('searchMore', (url) => {
+        translators.forEach(translator => {
+            let response = translator.getSearchResults(url);
+            response.then(response => socket.emit('searchedPublications', response));
+        });
+    });
+
+    socket.on('searchCitations', (data) => { 
+        data.forEach(obj => {
+            translators.forEach(translator => {
+                let response = translator.getCitationResults(translator.getCitationUrl(obj.scopusId));
+                response.then(response => socket.emit('searchedCitations', {...response, pubTitle: obj.title}));
+            });
+        });
+
+    });
+
 });
+
+

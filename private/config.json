@@ -1,8 +1,9 @@
 {
-  "key": "testKey123",
+  "key": "citKey2020",
+  "minNumberOfResults": 100,
   "databases": {
     "scopus": {
-      "apiKey": "7f59af901d2d86f78a1fd60c1bf9426a",
+      "apiKey": "e70da21a4053768ce06b5b972a5df2c7",
       "translatorFileName": "Scopus.js"
     }
   }

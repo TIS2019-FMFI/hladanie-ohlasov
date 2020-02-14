@@ -1,3 +1,69 @@
 .error {
     border: 2px solid #d32020
 }
+
+body{
+    width: 100%;
+    align-content: center;
+    font-size: large;
+    
+}
+img{
+    width: 30%;
+    display:block;
+    margin: 10px;
+    margin-left: auto;
+    margin-right: auto;
+    height:auto;
+}
+#lines{
+    width: 100%;
+    padding-left: auto;
+    padding-right: auto;
+    border-style: dashed;
+}
+
+fieldset {
+  display: block;
+  margin-top: 1%;
+  padding-bottom: 0.625em;
+  padding-left: 0.75em;
+  padding-right: 0.75em;
+  border: 2px dashed ;
+  
+}
+
+label{
+    line-height: 2em;
+}
+
+fieldset a{
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+form{
+  width: 50%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+button:hover {
+  background-color: #FFFFFF; 
+  color: black;
+}
+button {
+  transition-duration: 1s;
+  background-color: #000000; 
+  border: none;
+  color: white;
+  width: 100%;
+  height: 30px;
+  margin-top: 10px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+}

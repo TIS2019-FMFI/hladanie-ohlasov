@@ -4,7 +4,9 @@
   "main": "index.js",
   "dependencies": {
     "express": "^4.17.1",
+    "fetch-with-proxy": "^1.1.0",
     "node-fetch": "^2.6.0",
+    "node-fetch-with-proxy": "^0.1.2",
     "socket.io": "^2.3.0"
   },
   "devDependencies": {},
