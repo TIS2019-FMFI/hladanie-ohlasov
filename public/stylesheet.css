@@ -2,11 +2,15 @@
     border: 2px solid #d32020
 }
 
+html {
+  height: 100%;
+}
+
 body{
-    width: 100%;
+    width: calc(100% - 16px);
+    height: calc(100% - 16px);
     align-content: center;
     font-size: large;
-    
 }
 img{
     width: 30%;
@@ -43,9 +47,11 @@ fieldset a{
 }
 
 form{
-  width: 50%;
+  width: 60%;
   margin-left: auto;
   margin-right: auto;
+  padding-top: 10px;
+  padding-bottom: 20px;
 }
 
 button:hover {

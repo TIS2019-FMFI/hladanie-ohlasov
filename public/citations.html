@@ -10,10 +10,12 @@
     </body>
 </html>
 <link rel="stylesheet" type="text/css" href="stylesheet.css">
-<script src="renderer.js"></script>
+<script src="citations.js"></script>
 <script src="/socket.io/socket.io.js"></script>
-
 <script>
-    window.renderer = new Renderer();
-    
+    window.Citations = function(data) {
+        new Citations(data);
+    };
+    document.body.style.cursor = "progress";
 </script>
+

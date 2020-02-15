@@ -21,7 +21,7 @@ module.exports = {
             let results = data['search-results'];
 
             if (results['opensearch:totalResults'] == 0){
-                return null;
+                return {numberOfResults: 0, source: "Scopus"};
             }
 
             let parsedData = {
