@@ -10,7 +10,6 @@ const
     //linux bash:  export ALL_PROXY="http://login:password@proxy.uniba.sk:3128"
     //windows: go to proxy setttings,add script address ->  http://www.uniba.sk/proxy.pac
     fetch = require('node-fetch-with-proxy'); // AT SCHOOL: fetch = require('node-fetch');
-
 // static files
 app.use(express.static('public'));
 
