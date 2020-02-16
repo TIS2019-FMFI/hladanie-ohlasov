@@ -96,8 +96,14 @@ class Publications {
             }
             socket.emit('searchCitations', res);
             let citWindow = window.open('http://localhost:4000/citations.html');
+            let Citations = null;
             socket.on('searchedCitations', (data) => {
-                citWindow.Citations(data);
+                if (!Citations){
+                    Citations = citWindow.Citations(data);
+                } else {
+                    Citations.render(data);
+                }
+                
             });
             
         });
