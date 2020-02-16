@@ -34,7 +34,6 @@ fieldset {
   padding-left: 0.75em;
   padding-right: 0.75em;
   border: 2px dashed ;
-  
 }
 
 label{
@@ -45,6 +44,7 @@ fieldset a{
     padding-left: 10px;
     padding-right: 10px;
 }
+fieldse
 
 form{
   width: 60%;
@@ -57,6 +57,8 @@ form{
 button:hover {
   background-color: #FFFFFF; 
   color: black;
+  border:1px solid;
+  border-color: black;
 }
 button {
   transition-duration: 1s;
@@ -72,4 +74,13 @@ button {
   text-decoration: none;
   display: inline-block;
   font-size: 16px;
+}
+button.copy{
+    margin: 0;
+    float:right;
+    width: 100px;
+}
+fieldset.checked {
+  border: 2px solid ;
+  box-shadow: 0px 0px 10px red;
 }
