@@ -16,7 +16,7 @@ module.exports = {
 
             //return data; // AK CHCEM VIDIED STRUKTURU DAT V PREHLIACACI... inak zakomentovat"
 
-            console.log(data);
+            //console.log(data);
 
             let results = data['search-results'];
 
@@ -44,6 +44,7 @@ module.exports = {
                         title: element['dc:title'],
                         year: element['prism:coverDate'],
                         source: "Scopus",
+                        pubName: element["prism:publicationName"],
                         affiliation: element['affiliation'],
                         volume: element['prism:volume'],
                         pages: element['prism:pageRange'],

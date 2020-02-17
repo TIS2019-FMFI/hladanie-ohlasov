@@ -13,13 +13,19 @@ class Publications {
             this.noResults(data.source);
         }
         this.renderBack();
+        document.body.style.cursor = "";
         this.resultForm.hidden = false;
     }
 
     render(data) {
+        console.log(data);
         let pubs = data.publications;
         let resultsDiv = document.getElementsByClassName('searchResults')[0];
         let buttonDiv = document.getElementsByClassName('buttonDiv')[0];
+
+        let pubHeading = document.createElement('h1');
+        pubHeading.innerHTML = "Nájdené záznamy";
+        resultsDiv.appendChild(pubHeading);
 
         if(document.getElementById('moreButton')) {
             document.getElementById('moreButton').disabled = false;
@@ -28,20 +34,51 @@ class Publications {
         for (var i = 0; i < pubs.length; i++) {
             
             let fieldSet = document.createElement('fieldset');
-            let checkBox = document.createElement('input'); checkBox.type = 'checkbox';
+            let checkBox = document.createElement('input'); checkBox.type = 'checkbox'; checkBox.style.float = "right";
+            checkBox.addEventListener('click', function(e) {
+                if (e.target.checked) {
+                    fieldSet.classList.add("checked");
+                } else {
+                    fieldSet.classList.remove("checked");
+                }
+            });
             this.searchResults[this.id++] = {...pubs[i], check: checkBox, self: fieldSet};
             fieldSet.appendChild(checkBox);
 
             let legend = document.createElement('legend'); legend.innerText = pubs[i].title;
             fieldSet.appendChild(legend);
-            fieldSet.appendChild(document.createTextNode(
-                "source: "+pubs[i].source + " | " +
-                " year: "+ pubs[i].year.split('-')[0] + " | " +
-                " volume: " + pubs[i].volume + " | " +
-                " pages: " + pubs[i].pages + " | " +
-                " doi: " + pubs[i].doi
-            ));
-            fieldSet.appendChild(document.createElement('br'));
+            let dataDiv = document.createElement('div'); dataDiv.style.width = "95%";
+            fieldSet.appendChild(dataDiv);
+            let yearDiv = document.createElement('div');
+            yearDiv.className = "year";
+            yearDiv.innerHTML = "<b>Year:</b> " + pubs[i].year.split('-')[0];
+            dataDiv.appendChild(yearDiv);
+            let sourceDiv = document.createElement('div');
+            sourceDiv.className = "source";
+            sourceDiv.innerHTML = "<b>Source:</b> " + pubs[i].source;
+            dataDiv.appendChild(sourceDiv);
+            if (pubs[i].volume != undefined) {
+                let volumeDiv = document.createElement('div');
+                volumeDiv.className = "volume";
+                volumeDiv.innerHTML = "<b>Volume:</b> " + pubs[i].volume;
+                dataDiv.appendChild(volumeDiv);
+            }
+            if (pubs[i].pages != null) {
+                let pagesDiv = document.createElement('div');
+                pagesDiv.className = "pages";
+                pagesDiv.innerHTML = "<b>Pages:</b> " + pubs[i].pages;
+                dataDiv.appendChild(pagesDiv);
+            }
+            if (pubs[i].issue != undefined) { 
+                let issueDiv = document.createElement('div');
+                issueDiv.className = "issue";
+                issueDiv.innerHTML = "<b>Issue:</b> " + pubs[i].issue;
+                dataDiv.appendChild(issueDiv);
+            }
+            let countDiv = document.createElement('div');
+            countDiv.className = "count";
+            countDiv.innerHTML = "<b>Citation count:</b> " + pubs[i].citationCount;
+            dataDiv.appendChild(countDiv);
             fieldSet.appendChild(document.createTextNode(pubs[i].authors.length.toString() + " authors: "));
 
             for (let j=0; j<pubs[i].authors.length; j++) {
@@ -74,8 +111,8 @@ class Publications {
                 moreButton.hidden = true;
             }
         }
-        document.body.style.cursor = "";
-        console.log(this.searchResults)
+        
+        console.log(this.searchResults);
     }
 
     renderCit() {
