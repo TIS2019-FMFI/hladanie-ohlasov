@@ -23,10 +23,6 @@ class Publications {
         let resultsDiv = document.getElementsByClassName('searchResults')[0];
         let buttonDiv = document.getElementsByClassName('buttonDiv')[0];
 
-        let pubHeading = document.createElement('h1');
-        pubHeading.innerHTML = "Nájdené záznamy";
-        resultsDiv.appendChild(pubHeading);
-
         if(document.getElementById('moreButton')) {
             document.getElementById('moreButton').disabled = false;
         }
