@@ -1,0 +1,13 @@
+Projekt vyhľadávanie ohlasov
+
+Stav projektu:
+
+Projekt má dve fázy vyhľadávania, pre databázy Scopus a WOS funguje prvá časť vyhľadávania(publikacie).
+
+Pre obe databázy je potrebná extended verzia API, ktoré sa využívajú na dohľadávanie(citácií) pre označené publikácie na základe predošlého vyhľadávania. 
+Táto funkcionalita by sa dala doplniť podľa technickej dokumentácie, ktorá obsahuje návrh, katalóg aj testovacie scenáre.
+
+Na zachovanie integrity aplikácie sa nefunkčné časti dotvorili fake dátami, preto druhá časť vyhľadávania dáva vždy rovnaký výsledok z načítaného súboru(nie cez API z DB).
+V prípade prerábania aplikácie je potrebné tieto "fake" časti odstránit a prerobiť cez funkćné api.
+
+Návod na používanie aplikácie je v súbore README.md a všetky potrebné odkazy a informácie sa nachádzajú v dokumentácii.
