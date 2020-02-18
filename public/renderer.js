@@ -11,6 +11,7 @@ class Renderer {
                 authKey: sessionStorage.getItem('authKey')
             }); 
         }
+        
         let authForm = document.createElement('form');
         authForm.id = 'autorizacnyFormular';
         let authFieldset = document.createElement('fieldset');

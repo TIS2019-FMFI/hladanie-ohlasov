@@ -30,9 +30,10 @@ img{
 fieldset {
   display: block;
   margin-top: 1%;
-  padding-bottom: 0.625em;
+  padding-bottom: 0.75em;
   padding-left: 0.75em;
   padding-right: 0.75em;
+  margin-bottom: 1em;
   border: 2px dashed ;
 }
 
@@ -44,14 +45,49 @@ fieldset a{
     padding-left: 10px;
     padding-right: 10px;
 }
-fieldse
+
+fieldset p{
+  width: 80%;
+  margin: 10px 0;
+  float: left;
+}
+
+.searchResults input{
+  width: 15px;
+  height: 15px;
+}
+
+.pubFieldSet{
+  margin: 30px;
+}
+
+#autorizacnyFormular, #uvodnyFormular{
+  margin-top: 20px;
+}
+
+.year, .volume, .source, .issue, .pages, .count, .doi{
+  display: inline-block;
+  border: 1px solid ;
+  border-radius: 3px;
+  margin-right: 10px;
+  margin-bottom : 10px;
+  padding: 1px;
+}
+
+fieldset button{
+  width: 20%;
+}
+
+h1{
+  margin-top: 8px;
+  text-align: center;
+}
 
 form{
   width: 60%;
   margin-left: auto;
   margin-right: auto;
-  padding-top: 10px;
-  padding-bottom: 20px;
+  padding-bottom: 10px;
 }
 
 button:hover {
@@ -78,9 +114,10 @@ button {
 button.copy{
     margin: 0;
     float:right;
+    margin: 10px 0;
     width: 100px;
 }
 fieldset.checked {
   border: 2px solid ;
-  box-shadow: 0px 0px 10px red;
+  box-shadow: 3px 4px 7px rgb(240, 52, 93);
 }

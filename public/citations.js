@@ -9,13 +9,44 @@ class Citations {
 
     render(data) {
         console.log(data);
-        let pubFieldSet = document.createElement('fieldset');
+        let pubFieldSet = document.createElement('fieldset'); pubFieldSet.className = "pubFieldSet";
         let legend = document.createElement('legend');
         legend.innerText = data.publication.title;
         pubFieldSet.appendChild(legend);
-        pubFieldSet.appendChild(document.createTextNode(
-            "doi: "+ data.publication.doi
-        ));
+        let dataDiv = document.createElement('div');
+        pubFieldSet.appendChild(dataDiv);
+        let yearDiv = document.createElement('div');
+        yearDiv.className = "year";
+        yearDiv.innerHTML = "<b>Year:</b> " + data.publication.year.split('-')[0];
+        dataDiv.appendChild(yearDiv);
+        let sourceDiv = document.createElement('div');
+        sourceDiv.className = "source";
+        sourceDiv.innerHTML = "<b>Source:</b> " + data.publication.source;
+        dataDiv.appendChild(sourceDiv);
+        if (data.publication.volume != undefined) {
+            let volumeDiv = document.createElement('div');
+            volumeDiv.className = "volume";
+            volumeDiv.innerHTML = "<b>Volume:</b> " + data.publication.volume;
+            dataDiv.appendChild(volumeDiv);
+        }
+        if (data.publication.pages != null) {
+            let pagesDiv = document.createElement('div');
+            pagesDiv.className = "pages";
+            pagesDiv.innerHTML = "<b>Pages:</b> " + data.publication.pages;
+            dataDiv.appendChild(pagesDiv);
+        }
+        if (data.publication.issue != undefined) { 
+            let issueDiv = document.createElement('div');
+            issueDiv.className = "issue";
+            issueDiv.innerHTML = "<b>Issue:</b> " + data.publication.issue;
+            dataDiv.appendChild(issueDiv);
+        }
+        if (data.publication.doi != undefined) { 
+            let doiDiv = document.createElement('div');
+            doiDiv.className = "doi";
+            doiDiv.innerHTML = "<b>DOI:</b> " + data.publication.doi;
+            dataDiv.appendChild(doiDiv);
+        }
         for (let cit of data.citations){
             
             let citFieldSet = document.createElement('fieldset');
@@ -26,14 +57,12 @@ class Citations {
             copyButton.innerHTML = "Kopírovať";
             copyButton.className = "copy";
             let field591 = document.createElement('p'); 
-            field591.hidden = true;
             field591.innerHTML = this.format(cit);
             this.copyEvent(this, copyButton);
 
             citFieldSet.appendChild(field591);
             citFieldSet.appendChild(copyButton);
-            citFieldSet.appendChild(document.createElement('br'));
-    
+    /*
             citFieldSet.appendChild(document.createTextNode(
                 "source: "+ cit.source + " | " +
                 " year: "+ cit.year + " | " +
@@ -50,7 +79,7 @@ class Citations {
                     citFieldSet.appendChild(document.createTextNode(" – "));
                 }
             }
-    
+    */
             pubFieldSet.appendChild(citFieldSet);
         }
         this.citationsDiv.appendChild(pubFieldSet);
