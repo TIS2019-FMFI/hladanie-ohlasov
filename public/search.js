@@ -8,6 +8,7 @@ class SearchForm {
         }
     }
 
+    // zobrazi uvodny formular vyhladavania
     render() {
         let doiCheckbox = document.createElement('input');
         doiCheckbox.id = 'doiSearch';
@@ -145,7 +146,7 @@ class SearchForm {
             let doiSearch = document.getElementById('doiSearch').checked;
             
             socket.emit('uvodnyFormular', {
-                searchByDOI: doiSearch,//document.getElementById('doiSearch').checked,
+                searchByDOI: doiSearch,
                 DOI: (doiSearch) ? document.getElementById('DOI').value : '',
                 name: (doiSearch) ? '' : document.getElementById('name').value,
                 surname: (doiSearch) ? '' : document.getElementById('surname').value,

@@ -96,6 +96,12 @@ button:hover {
   border:1px solid;
   border-color: black;
 }
+
+.copied {
+  border:2px solid;
+  box-shadow: 3px 4px 7px rgb(30, 30, 230);
+}
+
 button {
   transition-duration: 1s;
   background-color: #000000; 

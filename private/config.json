@@ -5,10 +5,6 @@
     "scopus": {
       "apiKey": "e70da21a4053768ce06b5b972a5df2c7",
       "translatorFileName": "Scopus.js"
-    },
-    "WOS": {
-      "apiKey": "",
-      "translatorFileName": "WOS.js"
     }
   }
 }

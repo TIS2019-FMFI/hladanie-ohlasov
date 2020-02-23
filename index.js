@@ -126,6 +126,7 @@ for (let key in databasesJSON) {
 io.on('connection', (socket) => {
     console.log('Made socket connection ', socket.id);
 
+    // kontrola kluca
     socket.on('autorizacia', (data) => {
         let key = JSON.parse(fs.readFileSync(path.resolve(__dirname, 'private/config.json'))).key;
         if (data.authKey === key){
@@ -135,6 +136,7 @@ io.on('connection', (socket) => {
         }
     });
 
+    // vyhladavanie publikacii po vyplneni uvodneho formulara
     socket.on('uvodnyFormular', (data) => {
         translators.forEach(translator => {
             let years = data.years.split("&&");
@@ -149,6 +151,7 @@ io.on('connection', (socket) => {
         });
     });
 
+    // dodatocne dohladavanie publikacii
     socket.on('searchMore', (url) => {
         translators.forEach(translator => {
             let response = translator.getSearchResults(url);
@@ -156,6 +159,7 @@ io.on('connection', (socket) => {
         });
     });
 
+    // vyhladavanie citacii
     socket.on('searchCitations', (data) => { 
         data.forEach(obj => {
             translators.forEach(translator => {
@@ -166,7 +170,6 @@ io.on('connection', (socket) => {
                 setTimeout(function () {
                     socket.emit('searchedCitations', {...fakeData, publication: obj});
                 }, 500)
-                
             });
         });
 

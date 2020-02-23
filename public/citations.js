@@ -100,7 +100,9 @@ class Citations {
     }
 
     copyEvent(self, element){
-        element.addEventListener("click", function() {
+        element.addEventListener("click", function(e) {
+            console.log(e.target.parentElement);
+            e.target.parentElement.className = "copied";
             let field591 = element.parentElement.getElementsByTagName("p")[0];
             self.copyStringToClipboard(field591.innerHTML);
         });

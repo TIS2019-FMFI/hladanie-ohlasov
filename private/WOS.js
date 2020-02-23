@@ -3,7 +3,7 @@ const
     url = require('url'),
     util = require('util'),
     fetch = require('node-fetch-with-proxy'); // AT SCHOOL: fetch = require('node-fetch');
-fs = require('fs'),
+    fs = require('fs'),
     path = require('path');
 
 const DomParser = require('dom-parser');
@@ -70,33 +70,33 @@ module.exports = {
         }
 
         async getSearchResults(url) {
-
+            let result = {};
             const exec = require('child_process').exec;
             let WosSearchBashScript = (process.env.ALL_PROXY === undefined) ? 'wos --lite query "' + url + '"' : 'wos --lite --proxy ' + process.env.ALL_PROXY + ' query "' + url + '"';
-            const shellScript = await exec(WosSearchBashScript);
-            await shellScript.stdout.on('data', async (data) => {
+            const shellScript = exec(WosSearchBashScript);
+            await shellScript.stdout.on('data', (data) => {
                 let pole = data.split('\n');
                 pole.shift();
                 let strippedData = pole.join('\n');
                 // do whatever you want here with data
-                //console.log(data);
+                console.log(data);
 
                 let self = this;
                 var parser = new xml2js.Parser({stripPrefix: true});
-                parser.parseStringPromise(strippedData).then(await function (result) {
+                parser.parseStringPromise(strippedData).then(function (result) {
                     //console.log(result);
-                    return self.parseData(result);
+                    result = self.parseData(result);
 
                 })
-                    .catch(function (err) {
-                        // Failed
-                    });
-
+                .catch(function (err) {
+                    console.log(err);
+                });
 
             });
             shellScript.stderr.on('data', (data) => {
                 console.error(data);
             });
+            return result;
         }
 
         getUrl(name, surname, years, affiliation, DOI) {
